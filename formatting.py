@@ -111,11 +111,6 @@ def fmt_disp_msg(app, msg, mobj, user=None):
         if bgluma > 215 and colorluma > 215:
             color = f"#{hex(r // 1.5)}{hex(g // 1.5)}{hex(g // 1.5)}"
 
-        fmt = '<b><span style="color:black;">{time} <span style="color:{color};">{init}: {msg}</span></span></b><br />'
-        msg = fmt.format(time="[" + time + "]" if app.options["conversations"]["time_stamps"] else "", init=init,
-                         msg=msg.strip(), color=color)
-        msg = app.emojis.process_emojis(msg, mobj)
-        msg = app.mentions.process_mentions(msg, mobj)
         if str(msg).find("|") != -1:
             ## -- Spoiler tag magic -- ##
             # TODO: define these variables somehwere that isn't here
@@ -150,6 +145,8 @@ def fmt_disp_msg(app, msg, mobj, user=None):
             # removes last ||, as it's not part of a valid spoiler tag
                 spoilerPipeLocations = validPipeLocations[:-1]
 
+            spoilerPipeLocations.sort()
+
             print("All instances of || are:             " + str(allPipeLocations))
             print("All escaped instances are:           " + str(escapedPipeLocations))
             print("All instances of ||| are:            " + str(extraPipeLocations))
@@ -170,7 +167,7 @@ def fmt_disp_msg(app, msg, mobj, user=None):
                     # if last split was plaintext, this split is spoilered
                     if spoileredLastSplit == False:
                         spoileredLastSplit = True
-                        modifiedMessage = modifiedMessage + "<div class=\"spoiler\">" + str(tempMessage) + "</div>"
+                        modifiedMessage = modifiedMessage + "<span class=\"spoiler\">" + str(tempMessage) + "</span>"
                     # if last split was spoilered, this split is plaintext
                     else:
                         modifiedMessage = modifiedMessage + tempMessage
@@ -183,7 +180,7 @@ def fmt_disp_msg(app, msg, mobj, user=None):
                     # if last split was plaintext, this split is spoilered
                     if spoileredLastSplit == False:
                         spoileredLastSplit = True
-                        modifiedMessage = modifiedMessage + "<div class=\"spoiler\">" + str(tempMessage) + "</div>"
+                        modifiedMessage = modifiedMessage + "<span class=\"spoiler\">" + str(tempMessage) + "</span>"
                     # if last split was spoilered, this split is plaintext
                     else:
                         modifiedMessage = modifiedMessage + tempMessage
@@ -197,6 +194,11 @@ def fmt_disp_msg(app, msg, mobj, user=None):
             print("\n\n Input Message: " + msg)
             print("Output Message: " + msg)
 
+        fmt = '<b><span style="color:black;">{time} <span style="color:{color};">{init}: {msg}</span></span></b><br />'
+        msg = fmt.format(time="[" + time + "]" if app.options["conversations"]["time_stamps"] else "", init=init,
+                         msg=msg.strip(), color=color)
+        msg = app.emojis.process_emojis(msg, mobj)
+        msg = app.mentions.process_mentions(msg, mobj)
     return msg
 
 
