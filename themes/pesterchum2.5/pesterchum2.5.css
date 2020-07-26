@@ -427,3 +427,12 @@ img{
 	padding: 1px 0px 1px 0px;
 	font-family: Courier New;
 }
+
+.spoiler{
+	background-color: #000000;
+	color: #000000;
+  }
+.spoiler::hover{
+	background-color: #333333;
+	color: #cccccc;
+}
